@@ -11,17 +11,24 @@
 
 	//if save button is clicked
 	if (isset($_POST['save'])){
-		$taskTitle = $_POST['taskTitle'];
+
 		$taskDetails = $_POST['taskDetails'];
 		$dueDate = $_POST['dueDate'];
+		$taskTitle = $_POST['taskTitle'];
 
 		$query1 = "INSERT INTO description (details) VALUES ('$taskDetails')";
 		mysqli_query($conn,$query1);
+		$descriptionQuery = mysqli_query($conn, "SELECT MAX(descriptionID) FROM description");
+		$resultDescription = mysqli_fetch_row($descriptionQuery);
+		$desForeignKey = $resultDescription[0];
 
 		$query2 = "INSERT INTO duedate (setDate) VALUES ('$dueDate')";
 		mysqli_query($conn,$query2);
+		$dateQuery = mysqli_query($conn, "SELECT MAX(dueDateID) FROM duedate");
+		$resultDate = mysqli_fetch_row($dateQuery);
+		$dateForeignKey = $resultDate[0];
 
-		$query = "INSERT INTO tasks (title, description_fk, duedate_fk) VALUES ('$taskTitle', '$descriptionID', '$dueDateID')";
+		$query = "INSERT INTO tasks (title, description_fk, duedate_fk) VALUES ('$taskTitle', '$desForeignKey', '$dateForeignKey')";
 		mysqli_query($conn,$query);
 
 		$_SESSION['msg'] = "Entry Saved";
@@ -30,7 +37,7 @@
 
 	//Delete Records
 	if( isset($_GET['delete'])) {
-		$patientID = $_GET['delete'];
+		$taskID = $_GET['delete'];
 		mysqli_query($conn, "DELETE FROM tasks WHERE taskID = '$taskID'");
 		
 		$_SESSION['msg'] = "Entry Deleted";
