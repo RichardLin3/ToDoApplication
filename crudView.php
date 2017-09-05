@@ -1,16 +1,17 @@
-crudView.php<html>
+<html>
 <head><link rel="stylesheet" href="style.css" type="text/css"></head>
 <div class ="box">
 	<a href ="index.html">Home</a>
 </div>
-<?php include('Crud.php');
+<?php include('crud.php');
 
 if(isset($_GET['edit'])) {
 	$taskID = $_GET['edit'];
 	$edit_state = true;
-	$rec = mysqli_query($conn, "SELECT p.address as patientAddress, p.dateOfBirth as patientDateOfBirth, p.name as patientName, p.phoneNumber as patientNumber, p.patientID as patientID, p.sex as patientSex FROM patient as p WHERE patientID = '$patientID'");
+	$rec = mysqli_query($conn, "SELECT t.taskID as taskID, t.title as taskTitle, t.description as taskDescription FROM tasks as t WHERE taskID = '$taskID'");
 	$record = mysqli_fetch_array($rec);
 
+	$taskID = $record['taskID'];
 	$taskTitle = $record['taskTitle'];
 	$taskDescription = $record['taskDescription'];
 }
@@ -35,7 +36,7 @@ if(isset($_GET['edit'])) {
 			</tr>
 		</thead>
 		<tbody>
-			<?php while($row = mysqli_fetch_array($results)) { ?>
+			<?php while($row = mysqli_fetch_array($results)) {?>
 			<tr>
 				<td><?php echo $row['taskTitle'] ?></td>
 				<td><?php echo $row['taskDescription'] ?></td>

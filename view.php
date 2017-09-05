@@ -1,10 +1,11 @@
 <?php include('crud.php');
 	if(isset($_GET['edit'])) {
-		$taskId = $_GET['edit'];
+		$taskID = $_GET['edit'];
 		$edit_state = true;
-		$rec = mysqli_query($conn, "SELECT t.title as taskTitle, t.text as taskDescription FROM tasks as t");
+		$rec = mysqli_query($conn, "SELECT t.taskID as taskID, t.title as taskTitle, t.description as taskDescription FROM tasks as t");
 		$record = mysqli_fetch_array($rec);
 
+		$taskID = $record['taskID'];
 		$taskTitle = $record['taskTitle'];
 		$taskDescription = $record['taskDescription'];
 	}
@@ -14,7 +15,7 @@
 <html>
 <head><link rel="stylesheet" href="style.css" type="text/css"></head>
 <body>
-	<?php if(isset($_SESSION['msg']:)) ?>
+	<?php if(isset($_SESSION['msg'])): ?>
 		<?php
 			echo $_SESSION['msg'];
 			unset($_SESSION['msg']);
@@ -29,7 +30,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php whil($row = mysqli_fetch_array($results)) { ?>
+			<?php while($row = mysqli_fetch_array($results)) { ?>
 				<tr>
 					<td><?php echo $row['taskTitle'] ?></td>
 					<td><?php echo $row['taskDescription'] ?></td>
