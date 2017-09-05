@@ -1,48 +1,60 @@
 <?php
 	session_start();
-	
+	$descriptionID = "";
+	$dueDateID = "";	
+	$taskID = "";
 	$taskTitle = "";
-	$taskDescription = "";
-
-	$edit_state = false;
+	$taskDetails = "";
+	$dueDate = "";
 
 	include("dbCon.php");
 
 	//if save button is clicked
 	if (isset($_POST['save'])){
-		$taskTitle = $_POST['taskTitle'];
-		$taskDescription = $_POST['taskDescription'];
 
-		$query = "INSERT INTO patient (name, address, dateOfBirth, phoneNumber, sex, patientID) VALUES ('$patientName', '$patientAddress', '$patientDateOfBirth', '$patientNumber', '$patientSex', '$patientID')";
-		mysqli_query($conn, $query);
+		$taskDetails = $_POST['taskDetails'];
+		$dueDate = $_POST['dueDate'];
+		$taskTitle = $_POST['taskTitle'];
+
+		$query1 = "INSERT INTO description (details) VALUES ('$taskDetails')";
+		mysqli_query($conn,$query1);
+		$descriptionQuery = mysqli_query($conn, "SELECT MAX(descriptionID) FROM description");
+		$resultDescription = mysqli_fetch_row($descriptionQuery);
+		$desForeignKey = $resultDescription[0];
+
+		$query2 = "INSERT INTO duedate (setDate) VALUES ('$dueDate')";
+		mysqli_query($conn,$query2);
+		$dateQuery = mysqli_query($conn, "SELECT MAX(dueDateID) FROM duedate");
+		$resultDate = mysqli_fetch_row($dateQuery);
+		$dateForeignKey = $resultDate[0];
+
+		$query = "INSERT INTO tasks (title, description_fk, duedate_fk) VALUES ('$taskTitle', '$desForeignKey', '$dateForeignKey')";
+		mysqli_query($conn,$query);
 
 		$_SESSION['msg'] = "Entry Saved";
-		header('location: CRUDview.php');
+		header('location: crudView.php');
 	}
-
-	//update Records
-	if (isset($_POST['edit'])) {
-		$taskTitle = ($_POST['taskTitle']);
-		$taskDescription = ($_POST['taskDescription']);
-		
-		mysqli_query($conn, "UPDATE patient SET name='$patientName', patientID='$patientID', address ='$patientAddress', dateOfBirth='$patientDateOfBirth', phoneNumber='$patientNumber', sex='$patientSex' WHERE patientID='$patientID'");
-		
-		$_SESSION['msg'] = "Entry Updated";
-		header('location: CRUDview.php');
-	}
-
 
 	//Delete Records
 	if( isset($_GET['delete'])) {
-		$patientID = $_GET['delete'];
-		mysqli_query($conn, "DELETE FROM patient WHERE patientID = '$patientID'");
+		$taskID = $_GET['delete'];
+		mysqli_query($conn, "DELETE FROM tasks WHERE taskID = '$taskID'");
 		
 		$_SESSION['msg'] = "Entry Deleted";
-		header('location: CRUDview.php');
+		header('location: crudView.php');
 	}
 
 
-
 	//Retrieve Records
-	$results = mysqli_query($conn, "SELECT p.address as patientAddress, p.dateOfBirth as patientDateOfBirth, p.name as patientName, p.phoneNumber as patientNumber, p.patientID as patientID, p.sex as patientSex FROM patient as p");
+	$results = mysqli_query($conn, "
+		SELECT 
+			t.taskID as taskID,
+			t.title as taskTitle, 
+			d.descriptionID as descriptionID,
+			d.details as taskDetails,
+			du.dueDateID as dueDateID,
+			du.setDate as dueDate
+		FROM tasks as t
+		INNER JOIN description as d ON d.descriptionID=t.description_fk
+		INNER JOIN duedate as du on du.dueDateID=t.duedate_fk");
 ?>

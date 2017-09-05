@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 05, 2017 at 01:45 AM
+-- Generation Time: Sep 05, 2017 at 03:35 PM
 -- Server version: 5.7.14
 -- PHP Version: 5.6.25
 
@@ -23,12 +23,23 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `date`
+-- Table structure for table `description`
 --
 
-CREATE TABLE `date` (
-  `dateID` int(11) NOT NULL,
-  `time` date NOT NULL
+CREATE TABLE `description` (
+  `descriptionID` int(11) NOT NULL,
+  `details` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `duedate`
+--
+
+CREATE TABLE `duedate` (
+  `dueDateID` int(11) NOT NULL,
+  `setDate` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -40,20 +51,8 @@ CREATE TABLE `date` (
 CREATE TABLE `tasks` (
   `taskID` int(11) NOT NULL,
   `title` varchar(20) NOT NULL,
-  `text` varchar(300) NOT NULL,
-  `user_fk_id` int(11) NOT NULL,
-  `date_fk_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user`
---
-
-CREATE TABLE `user` (
-  `userID` int(11) NOT NULL,
-  `user_name` varchar(30) NOT NULL
+  `description_fk` int(11) DEFAULT NULL,
+  `duedate_fk` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -61,44 +60,44 @@ CREATE TABLE `user` (
 --
 
 --
--- Indexes for table `date`
+-- Indexes for table `description`
 --
-ALTER TABLE `date`
-  ADD PRIMARY KEY (`dateID`);
+ALTER TABLE `description`
+  ADD PRIMARY KEY (`descriptionID`);
+
+--
+-- Indexes for table `duedate`
+--
+ALTER TABLE `duedate`
+  ADD PRIMARY KEY (`dueDateID`);
 
 --
 -- Indexes for table `tasks`
 --
 ALTER TABLE `tasks`
   ADD PRIMARY KEY (`taskID`),
-  ADD KEY `user_fk_id` (`user_fk_id`),
-  ADD KEY `date_fk_id` (`date_fk_id`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`userID`);
+  ADD KEY `description_fk` (`description_fk`),
+  ADD KEY `duedate_fk` (`duedate_fk`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `date`
+-- AUTO_INCREMENT for table `description`
 --
-ALTER TABLE `date`
-  MODIFY `dateID` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `description`
+  MODIFY `descriptionID` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `duedate`
+--
+ALTER TABLE `duedate`
+  MODIFY `dueDateID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
   MODIFY `taskID` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
-  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- Constraints for dumped tables
 --
@@ -107,8 +106,8 @@ ALTER TABLE `user`
 -- Constraints for table `tasks`
 --
 ALTER TABLE `tasks`
-  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`user_fk_id`) REFERENCES `user` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `tasks_ibfk_2` FOREIGN KEY (`date_fk_id`) REFERENCES `date` (`dateID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`description_fk`) REFERENCES `description` (`descriptionID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `tasks_ibfk_2` FOREIGN KEY (`duedate_fk`) REFERENCES `duedate` (`dueDateID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
