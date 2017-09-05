@@ -19,9 +19,9 @@
 	<table>
 		<thead>
 			<tr>
-				<th>Task Title</th>
-				<th>Description</th>
-				<th>Due Date</th>
+				<th>Task Title |</th>
+				<th>Description |</th>
+				<th>Due Date |</th>
 				<th colspan="2">Action</th>
 			</tr>
 		</thead>
